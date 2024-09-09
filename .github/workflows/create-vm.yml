@@ -25,6 +25,7 @@ jobs:
           callbacks_enabled = timer, profile_tasks, profile_roles
           pipelining = True
           #collections_path = /data/ansible/collections:/data/.ansible/collections:/usr/share/ansible/collections
+          interpreter_python = /opt/pipx/venvs/ansible-core/bin/python
           strategy = free
           EOL
 
@@ -40,7 +41,7 @@ jobs:
 
           docker run --rm -v $(pwd):/data -e AZURE_SUBSCRIPTION_ID -e AZURE_CLIENT_ID -e AZURE_SECRET -e AZURE_TENANT \
             cytopia/ansible:latest-azure \
-            ansible-galaxy collection install azure.azcollection --force && \
+            ansible-galaxy collection install azure.azcollection && \
             ansible --version && \
             #/opt/pipx/venvs/ansible-core/bin/python -m pip install -r ./ansible/collections/ansible_collections/azure/azcollection/requirements.txt && \
             ansible-playbook -i localhost, ./ansible/vm.yml  -v
