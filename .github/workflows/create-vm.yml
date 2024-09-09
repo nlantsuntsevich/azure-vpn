@@ -48,6 +48,7 @@ jobs:
              ansible-galaxy collection list && \
              ansible --version && \
              python --version && \
+             python -m pip list && \
              /opt/pipx/venvs/ansible-core/bin/python --version && \
              /opt/pipx/venvs/ansible-core/bin/python -m pip list && \
              /opt/pipx/venvs/ansible-core/bin/python -m pip install -r /opt/pipx/venvs/ansible-core/lib/python3.10/site-packages/ansible_collections/azure/azcollection/requirements.txt && \
