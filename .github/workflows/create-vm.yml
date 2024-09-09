@@ -44,12 +44,6 @@ jobs:
             -e MY_UID=1000 \
             -e MY_GID=1000 \
             cytopia/ansible:latest-azure \
-            ansible-galaxy collection install azure.azcollection --force && \
-             ansible-galaxy collection list && \
-             ansible --version && \
-             python --version && \
-             /opt/pipx/venvs/ansible-core/bin/python --version && \
-             /opt/pipx/venvs/ansible-core/bin/python -m pip list && \
              /opt/pipx/venvs/ansible-core/bin/python -m pip install -r /opt/pipx/venvs/ansible-core/lib/python3.10/site-packages/ansible_collections/azure/azcollection/requirements.txt && \
             ansible-playbook -i localhost, ./ansible/vm.yml  -v
 
