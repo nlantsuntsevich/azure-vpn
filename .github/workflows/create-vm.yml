@@ -40,6 +40,9 @@ jobs:
           export AZURE_TENANT="${{ secrets.AZURE_TENANT }}"
 
           docker run --rm -v $(pwd):/data -e AZURE_SUBSCRIPTION_ID -e AZURE_CLIENT_ID -e AZURE_SECRET -e AZURE_TENANT \
+            -e USER=ansible \
+            -e MY_UID=1000 \
+            -e MY_GID=1000 \
             cytopia/ansible:latest-azure \
             ansible-galaxy collection install azure.azcollection --force && \
             ansible --version && \
