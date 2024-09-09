@@ -46,7 +46,7 @@ jobs:
             cytopia/ansible:latest-azure \
             ansible-galaxy collection install azure.azcollection --force && \
             ansible --version && \
-            /opt/pipx/venvs/ansible-core/bin/python -m pip install -r /data/ansible/collections/ansible_collections/azure/azcollection/requirements.txt && \
+            #/opt/pipx/venvs/ansible-core/bin/python -m pip install -r /data/ansible/collections/ansible_collections/azure/azcollection/requirements.txt && \
             ansible-playbook -i localhost, ./ansible/vm.yml  -v
 
         shell: bash
