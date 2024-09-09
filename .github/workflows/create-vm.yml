@@ -1,0 +1,48 @@
+name: Create and configure VM
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  create-vm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: pull ansible image
+        run: |
+          docker pull cytopia/ansible:latest-azure
+
+      - name: Create ansible.cfg
+        run: |
+          cat >./ansible.cfg <<EOL
+          [defaults]
+          force_color = True
+          stdout_callback = yaml
+          timeout = 120
+          display_skipped_hosts = false
+          callbacks_enabled = timer, profile_tasks, profile_roles
+          pipelining = True
+          collections_path = /data/ansible/collections
+          strategy = free
+          EOL
+
+          cat ./ansible.cfg
+        shell: bash
+
+      - name: trigger ansible deploy
+        run: |
+          export AZURE_SUBSCRIPTION_ID="${{secrets.AZURE_SUBSCRIPTION_ID }}"
+          export AZURE_CLIENT_ID="${{secrets.AZURE_CLIENT_ID}}"
+          export AZURE_SECRET="${{ secrets.AZURE_SECRET }}"
+          export AZURE_TENANT="${{ secrets.AZURE_TENANT }}"
+
+          docker run --rm -v $(pwd):/data -e AZURE_SUBSCRIPTION_ID -e AZURE_CLIENT_ID -e AZURE_SECRET -e AZURE_TENANT \
+            cytopia/ansible:latest-azure \
+            ansible-galaxy collection install azure.azcollection && \
+            ansible --version && \
+            /opt/pipx/venvs/ansible-core/bin/python -m pip install -r ./ansible/collections/ansible_collections/azure/azcollection/requirements.txt && \
+            ansible-playbook -i localhost, ./ansible/vm.yml  -v
+
+        shell: bash
