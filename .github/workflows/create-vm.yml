@@ -24,7 +24,7 @@ jobs:
           display_skipped_hosts = false
           callbacks_enabled = timer, profile_tasks, profile_roles
           pipelining = True
-          #collections_path = /data/ansible/collections:/data/.ansible/collections:/usr/share/ansible/collections
+          collections_path =  /home/ansible/.ansible/collections:/usr/share/ansible/collections
           interpreter_python = /opt/pipx/venvs/ansible-core/bin/python
           strategy = free
           EOL
