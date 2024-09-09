@@ -24,7 +24,7 @@ jobs:
           display_skipped_hosts = false
           callbacks_enabled = timer, profile_tasks, profile_roles
           pipelining = True
-          collections_path =  /home/ansible/.ansible/collections:/usr/share/ansible/collections
+          collections_path =  /home/ansible/.ansible/collections:/usr/share/ansible/collections:/opt/pipx/venvs/ansible-core/lib/python3.10/site-packages/ansible_collections
           interpreter_python = /opt/pipx/venvs/ansible-core/bin/python
           strategy = free
           EOL
@@ -45,7 +45,7 @@ jobs:
             -e MY_GID=1000 \
             cytopia/ansible:latest-azure \
             # ansible-galaxy collection install azure.azcollection --force && \
-             ansible-galaxy collection list -vvv && \
+             ansible-galaxy collection list && \
              ansible --version && \
              python --version && \
              /opt/pipx/venvs/ansible-core/bin/python --version && \
