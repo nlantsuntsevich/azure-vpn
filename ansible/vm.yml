@@ -49,7 +49,7 @@
       azure_rm_virtualmachine:
         resource_group: rg-vpn-auto
         name: vm-vpn-auto
-        vm_size: Standard_B1ls2
+        vm_size: Standard_B1s
         admin_username: azureuser
         ssh_password_enabled: false
         ssh_public_keys:
