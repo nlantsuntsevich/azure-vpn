@@ -1,2 +1,2 @@
 # azure-vpn
-Create VM in azure and configure OpenVPN for personal use
+Create VM in Azure and configure OpenVPN for personal use 
