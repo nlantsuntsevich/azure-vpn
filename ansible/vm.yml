@@ -81,9 +81,9 @@
             key_data: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvLOfoNgAvFLccYsDKicq8jduQoXk8J9fJ8TKuEwNPz
         managed_disk_type: Standard_LRS
         image:
-          offer: UbuntuServer
+          offer: 0001-com-ubuntu-server-jammy
           publisher: canonical
-          sku: 22_04-lts
+          sku: 22_04-lts-gen2
           version: latest
         # data_disks:
         #   - lun: 0
