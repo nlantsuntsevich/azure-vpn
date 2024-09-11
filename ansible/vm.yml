@@ -61,3 +61,4 @@
           publisher: Canonical
           sku: 22_04-lts
           version: latest
+        state: absent
