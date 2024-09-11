@@ -55,6 +55,7 @@
         virtual_network_name: vnet-vpn-auto
         upgrade_policy: Manual
         subnet_name: subnet-vpn-auto
+        public_ip_per_vm: true
         terminate_event_timeout_minutes: 10
         admin_username: azureuser
         custom_data:
