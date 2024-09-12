@@ -43,8 +43,11 @@
         name: nic-vpn-auto
         virtual_network: vnet-vpn-auto
         subnet: subnet-vpn-auto
-        #public_ip_name: public-ip-vpn-auto
         security_group: sg-vpn-auto
+        ip_configurations:
+          - name: ipconfig-vpn-auto
+            public_ip_address_name: public-ip-vpn-auto
+            primary: true
 
     - name: Create VMSS
       azure_rm_virtualmachinescaleset:
