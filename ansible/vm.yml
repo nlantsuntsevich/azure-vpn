@@ -60,7 +60,6 @@
         public_ip_per_vm: false
         terminate_event_timeout_minutes: 10
         admin_username: azureuser
-        upgrade_policy: Automatic #Manual
         custom_data: /data/cloud-init.sh
         ssh_password_enabled: false
         ssh_public_keys:
