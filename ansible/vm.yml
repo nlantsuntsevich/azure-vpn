@@ -56,11 +56,11 @@
         vm_size: Standard_B1s
         capacity: 1
         virtual_network_name: vnet-vpn-auto
-        #upgrade_policy: Manual
         subnet_name: subnet-vpn-auto
-        public_ip_per_vm: true
+        public_ip_per_vm: false
         terminate_event_timeout_minutes: 10
         admin_username: azureuser
+        upgrade_policy: Automatic #Manual
         custom_data: /data/cloud-init.sh
         ssh_password_enabled: false
         ssh_public_keys:
