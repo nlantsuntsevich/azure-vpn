@@ -47,7 +47,7 @@
         public_ip_per_vm: true
         terminate_event_timeout_minutes: 10
         admin_username: azureuser
-        custom_data: cloud-init.sh
+        custom_data: vpn-auto.sh
         ssh_password_enabled: false
         security_group_name: sg-vpn-auto
         ssh_public_keys:
