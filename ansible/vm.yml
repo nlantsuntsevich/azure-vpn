@@ -17,13 +17,13 @@
         name: subnet-vpn-auto
         address_prefix: "10.0.1.0/24"
         virtual_network: vnet-vpn-auto
-    - name: Create public IP address
-      azure_rm_publicipaddress:
-        resource_group: rg-vpn-auto
-        allocation_method: Static
-        name: public-ip-vpn-auto
-        state: absent
-      register: output_ip_address
+    # - name: Create public IP address
+    #   azure_rm_publicipaddress:
+    #     resource_group: rg-vpn-auto
+    #     allocation_method: Static
+    #     name: public-ip-vpn-auto
+    #     state: absent
+    #   register: output_ip_address
 
     # - name: Public IP of VM
     #   debug:
@@ -34,23 +34,23 @@
         name: sg-vpn-auto
         rules:
           - name: SSH
-            protocol: Tcp
+            protocol: *
             destination_port_range: 22
             access: Allow
-            priority: 1001
+            priority: 100
             direction: Inbound
-    - name: Create virtual network interface card
-      azure_rm_networkinterface:
-        resource_group: rg-vpn-auto
-        name: nic-vpn-auto
-        virtual_network: vnet-vpn-auto
-        subnet: subnet-vpn-auto
-        security_group: sg-vpn-auto
-        ip_configurations:
-          - name: ipconfig-vpn-auto
-            public_ip_address_name: public-ip-vpn-auto
-            primary: true
-        state: absent
+    # - name: Create virtual network interface card
+    #   azure_rm_networkinterface:
+    #     resource_group: rg-vpn-auto
+    #     name: nic-vpn-auto
+    #     virtual_network: vnet-vpn-auto
+    #     subnet: subnet-vpn-auto
+    #     security_group: sg-vpn-auto
+    #     ip_configurations:
+    #       - name: ipconfig-vpn-auto
+    #         public_ip_address_name: public-ip-vpn-auto
+    #         primary: true
+    #     state: absent
 
     - name: Create VMSS
       azure_rm_virtualmachinescaleset:
