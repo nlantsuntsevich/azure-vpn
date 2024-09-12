@@ -1,2 +1,2 @@
 #!/bin/sh
-echo "Hello World.  The time is now $(date -R)!" | tee /root/output.txt
+echo "this has been written via cloud-init" + $(date) >> /tmp/myScript.txt

@@ -71,4 +71,4 @@
           version: latest
       register: vm_result
 
-    - debug: var=vm_result.azure_vmss
+    - debug: var=vm_result
