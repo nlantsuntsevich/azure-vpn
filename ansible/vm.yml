@@ -57,11 +57,12 @@
         capacity: 1
         virtual_network_name: vnet-vpn-auto
         subnet_name: subnet-vpn-auto
-        public_ip_per_vm: false
+        public_ip_per_vm: true
         terminate_event_timeout_minutes: 10
         admin_username: azureuser
         custom_data: /data/cloud-init.sh
         ssh_password_enabled: false
+        security_group: sg-vpn-auto
         ssh_public_keys:
           - path: /home/azureuser/.ssh/authorized_keys
             key_data: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvLOfoNgAvFLccYsDKicq8jduQoXk8J9fJ8TKuEwNPz
