@@ -48,6 +48,7 @@
         terminate_event_timeout_minutes: 10
         admin_username: azureuser
         custom_data: vpn-auto.txt
+        scale_in_policy: OldestVM
         ssh_password_enabled: false
         security_group_name: sg-vpn-auto
         ssh_public_keys:
