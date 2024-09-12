@@ -69,8 +69,6 @@
           publisher: canonical
           sku: 22_04-lts-gen2
           version: latest
-        # data_disks:
-        #   - lun: 0
-        #     disk_size_gb: 64
-        #     caching: ReadWrite
-        #     managed_disk_type: Standard_LRS
+      register: vm_result
+
+    - debug: msg=vm_result.azure_vmss
