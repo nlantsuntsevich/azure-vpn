@@ -74,4 +74,6 @@
           version: latest
       register: vm_result
 
-    - debug: var=vm_result
+    - name: Get facts for all virtual machines of a resource group
+      azure_rm_virtualmachine_info:
+        resource_group: rg-vpn-auto
