@@ -2,6 +2,9 @@
   hosts: localhost
   connection: local
   tasks:
+    - name: Return motd to registered var
+      ansible.builtin.shell: ls -lah
+
     - name: Create resource group
       azure_rm_resourcegroup:
         name: rg-vpn-auto
@@ -61,7 +64,3 @@
     - name: Get facts for all virtual machines of a resource group
       azure_rm_virtualmachine_info:
         resource_group: rg-vpn-auto
-
-    - name: Return motd to registered var
-      ansible.builtin.command: ls -lah ./*; pwd
-      register: mymotd
