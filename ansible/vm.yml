@@ -61,7 +61,7 @@
           publisher: canonical
           sku: 22_04-lts-gen2
           version: latest
-        state: present
+        state: absent
       register: vm_result
 
     - name: Get facts for all virtual machines of a resource group
