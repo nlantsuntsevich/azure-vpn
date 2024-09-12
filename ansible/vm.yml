@@ -22,8 +22,9 @@
         resource_group: rg-vpn-auto
         allocation_method: Static
         name: public-ip-vpn-auto
+        state: absent
       register: output_ip_address
-      state: absent
+
     # - name: Public IP of VM
     #   debug:
     #     msg: "The public IP is {{ output_ip_address.state.ip_address }}."
@@ -49,7 +50,7 @@
           - name: ipconfig-vpn-auto
             public_ip_address_name: public-ip-vpn-auto
             primary: true
-      state: absent
+        state: absent
 
     - name: Create VMSS
       azure_rm_virtualmachinescaleset:
