@@ -27,6 +27,8 @@ jobs:
           collections_path =  /home/ansible/.ansible/collections:/usr/share/ansible/collections:/opt/pipx/venvs/ansible-core/lib/python3.10/site-packages/ansible_collections
           interpreter_python = /opt/pipx/venvs/ansible-core/bin/python
           strategy = free
+          host_key_checking = False
+          verbosity = 1
           EOL
 
           cat ./ansible.cfg
