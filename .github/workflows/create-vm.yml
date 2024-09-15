@@ -47,6 +47,5 @@ jobs:
             ansible-galaxy collection install azure.azcollection --force && \
              ansible-galaxy collection list && \
              /opt/pipx/venvs/ansible-core/bin/python -m pip install -r /opt/pipx/venvs/ansible-core/lib/python3.10/site-packages/ansible_collections/azure/azcollection/requirements.txt && \
-            ansible-playbook -i localhost, ./ansible/vm.yml  -v
-
+            ansible-playbook ./ansible/vm.yml
         shell: bash

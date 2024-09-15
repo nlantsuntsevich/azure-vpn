@@ -1,0 +1,11 @@
+---
+base_name: vpn-auto
+rg_name: rg-{{ base_name }}
+vnet_name: vnet-{{ base_name }}
+subnet_name: subnet-{{ base_name }}
+vmss_name: vmss-{{ base_name }}
+vm_user: azureuser
+location: polandcentral
+pub_ip_name: pubip-{{ base_name }}
+lb_name: lb-{{ base_name }}
+ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvLOfoNgAvFLccYsDKicq8jduQoXk8J9fJ8TKuEwNPz
