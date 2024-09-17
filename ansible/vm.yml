@@ -3,14 +3,14 @@
   connection: local
   vars:
     state: absent
-    custom_data_script: vpn-auto.txt # doesn't work
-    custom_data: |
-      #!/bin/bash
-      echo "This is custom data script running on the VM!"
-      echo "Hello from Azure VMSS 2!" + $(date) > /var/tmp/customdata.txt
+    # custom_data_config: cloud-init.txt
+    # sudo cat /var/lib/cloud/instances/d1d8ffc0-c2d3-614f-935f-a1128e5aef15/user-data.txt
+    # cloud-init.txt
+    vmss_state: absent
 
   vars_files:
     - vars/vmss.yml
+    - vars/custom_data.yml
 
   tasks:
     - name: Return motd to registered var
@@ -59,6 +59,7 @@
         tags:
           owner: natallia
       register: pub_ip_address
+      ignore_errors: true
 
     - name: Public IP
       debug:
@@ -128,11 +129,11 @@
             key_data: "{{ ssh_pub_key }}"
         managed_disk_type: Standard_LRS
         image:
-          offer: 0001-com-ubuntu-server-jammy
+          offer: ubuntu-24_04-lts
           publisher: canonical
-          sku: 22_04-lts
+          sku: server
           version: latest
-        state: "{{ state }}"
+        state: "{{ vmss_state }}"
         tags:
           owner: natallia
       register: vm_result
