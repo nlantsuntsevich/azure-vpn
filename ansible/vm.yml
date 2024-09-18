@@ -1,11 +1,10 @@
+# Simple usage:
+# ansible-playbook  vm.yml -e vmss_state=absent; ansible-playbook  vm.yml -e vmss_state=present; ssh az-vpn
 - name: Create Azure VM
   hosts: localhost
   connection: local
   vars:
     state: absent
-    # custom_data_config: cloud-init.txt
-    # sudo cat /var/lib/cloud/instances/d1d8ffc0-c2d3-614f-935f-a1128e5aef15/user-data.txt
-    # cloud-init.txt
     vmss_state: absent
 
   vars_files:
@@ -16,138 +15,11 @@
     - name: Return motd to registered var
       ansible.builtin.shell: ls -lah
 
-    - name: Create resource group
-      azure_rm_resourcegroup:
-        name: "{{ rg_name }}"
-        location: "{{ location }}"
+    - name: Include core tasks - rg, vnet, sg, ip
+      include_tasks: tasks/core_tasks.yml
 
-    - name: Create virtual network
-      azure_rm_virtualnetwork:
-        resource_group: "{{ rg_name }}"
-        name: "{{ vnet_name }}"
-        address_prefixes: "10.0.0.0/16"
-        tags:
-          owner: natallia
+    - name: Include app tasks - load balancer and vmss creation
+      include_tasks: tasks/lb_vmss.yml
 
-    - name: Add subnet
-      azure_rm_subnet:
-        resource_group: "{{ rg_name }}"
-        name: "{{ subnet_name }}"
-        address_prefix: "10.0.1.0/24"
-        virtual_network: "{{ vnet_name }}"
-
-    - name: Create Network Security Group that allows SSH
-      azure_rm_securitygroup:
-        resource_group: "{{ rg_name }}"
-        name: "sg-{{ base_name }}"
-        rules:
-          - name: SSH
-            protocol: TCP
-            destination_port_range: 22
-            access: Allow
-            priority: 1001
-            direction: Inbound
-        tags:
-          owner: natallia
-
-    - name: Create public IP address
-      azure_rm_publicipaddress:
-        resource_group: "{{ rg_name }}"
-        allocation_method: Static
-        name: "{{ pub_ip_name }}"
-        state: "{{ state }}"
-        tags:
-          owner: natallia
-      register: pub_ip_address
-      ignore_errors: true
-
-    - name: Public IP
-      debug:
-        msg: "The public IP is {{ pub_ip_address.state.ip_address }}."
-      when: pub_ip_address.state.ip_address is defined
-
-    - name: Create a load balancer
-      azure_rm_loadbalancer:
-        resource_group: "{{ rg_name }}"
-        name: "{{ lb_name }}"
-        location: "{{ location }}"
-        frontend_ip_configurations:
-          - name: "{{ base_name }}-front-config"
-            public_ip_address: "{{ pub_ip_name }}"
-        backend_address_pools:
-          - name: "{{ base_name }}-backend-pool"
-        probes:
-          - name: "{{ base_name }}-prob0"
-            port: 22
-            interval: 10
-            fail_count: 3
-        # inbound_nat_pools:
-        #   - name: "{{ base_name }}-nat-pool"
-        #     frontend_ip_configuration_name: "{{ base_name }}-front-config"
-        #     protocol: Tcp
-        #     frontend_port_range_start: 22
-        #     frontend_port_range_end: 23
-        #     backend_port: 22
-        load_balancing_rules:
-          - name: "{{ base_name }}-lb-rules"
-            frontend_ip_configuration: "{{ base_name }}-front-config"
-            backend_address_pool: "{{ base_name }}-backend-pool"
-            frontend_port: 22
-            backend_port: 22
-            load_distribution: SourceIPProtocol
-            probe: "{{ base_name }}-prob0"
-        # inbound_nat_rules:
-        #   - name: "{{ base_name }}-nat-rules"
-        #     frontend_ip_configuration: "{{ base_name }}-front-config"
-        #     protocol: Tcp
-        #     backend_port: 22
-        #     frontend_port: 22
-        state: "{{ state }}"
-        tags:
-          owner: natallia
-
-    - name: Create VMSS
-      azure_rm_virtualmachinescaleset:
-        resource_group: "{{ rg_name }}"
-        name: "{{ vmss_name }}"
-        vm_size: Standard_B1s
-        capacity: 1
-        virtual_network_name: "{{ vnet_name }}"
-        subnet_name: "{{ subnet_name }}"
-        public_ip_per_vm: false
-        terminate_event_timeout_minutes: 10
-        admin_username: "{{ vm_user }}"
-        custom_data: "{{ custom_data }}"
-        ssh_password_enabled: false
-        single_placement_group: true
-        orchestration_mode: Uniform
-        upgrade_policy: Automatic
-        load_balancer: "{{ lb_name }}"
-        security_group_name: sg-vpn-auto
-        ssh_public_keys:
-          - path: "/home/{{ vm_user }}/.ssh/authorized_keys"
-            key_data: "{{ ssh_pub_key }}"
-        managed_disk_type: Standard_LRS
-        image:
-          offer: ubuntu-24_04-lts
-          publisher: canonical
-          sku: server
-          version: latest
-        state: "{{ vmss_state }}"
-        tags:
-          owner: natallia
-      register: vm_result
-
-    # - name: List VM instances in Virtual Machine ScaleSet
-    #   azure_rm_virtualmachinescalesetinstance_info:
-    #     resource_group: "{{ rg_name }}"
-    #     vmss_name: "{{ vmss_name }}"
-    #   register: vmss_instances
-
-    # - name: Get information by the network name
-    #   azure.azcollection.azure_rm_vmssnetworkinterface_info:
-    #     resource_group: "{{ rg_name }}"
-    #     vmss_name: "{{ vmss_name }}"
-    #     vm_index: "{{ item.instance_id }}"
-    #   loop: "{{ vmss_instances.instances }}"
-    #   register: nic_result
+    - name: Include secrets - kv and secrets
+      include_tasks: tasks/kv.yml

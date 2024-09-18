@@ -7,15 +7,15 @@ custom_data: |
   apt dist-upgrade -y
   apt install openvpn easy-rsa -y
   make-cadir /etc/openvpn/easy-rsa
-  cd /etc/openvpn/easy-rsa
-  ./easyrsa init-pki
-  ./easyrsa build-ca
-  ./easyrsa gen-req myservername nopass
-  ./easyrsa gen-dh
-  ./easyrsa sign-req server myservername
-  cp pki/dh.pem pki/ca.crt pki/issued/myservername.crt pki/private/myservername.key /etc/openvpn/
-  ./easyrsa gen-req myclient1 nopass
-  ./easyrsa sign-req client myclient1
+  # cd /etc/openvpn/easy-rsa
+  # ./easyrsa init-pki
+  # ./easyrsa build-ca
+  # ./easyrsa gen-req myservername nopass
+  # ./easyrsa gen-dh
+  # ./easyrsa sign-req server myservername
+  # cp pki/dh.pem pki/ca.crt pki/issued/myservername.crt pki/private/myservername.key /etc/openvpn/
+  # ./easyrsa gen-req myclient1 nopass
+  # ./easyrsa sign-req client myclient1
   cat <<EOT >> /etc/openvpn/myserver.conf
     port 1194
     proto udp

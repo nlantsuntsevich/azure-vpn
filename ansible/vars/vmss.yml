@@ -9,3 +9,10 @@ location: polandcentral
 pub_ip_name: pubip-{{ base_name }}
 lb_name: lb-{{ base_name }}
 ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvLOfoNgAvFLccYsDKicq8jduQoXk8J9fJ8TKuEwNPz
+# placeholders
+secrets:
+  openvpn-passphrase: "my-passphrase-value"
+  openvpn-pki-dh-pem: "my-dh-pem-value"
+  openvpn-pki-ca-crt: "my-ca-crt-value"
+  openvpn-pki-myservername-crt: "my-myservername-crt-value"
+  openvpn-pki-myservername-key: "my-myservername-key-value"

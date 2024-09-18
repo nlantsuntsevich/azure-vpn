@@ -1,0 +1,50 @@
+---
+- name: Create resource group
+  azure_rm_resourcegroup:
+    name: "{{ rg_name }}"
+    location: "{{ location }}"
+
+- name: Create virtual network
+  azure_rm_virtualnetwork:
+    resource_group: "{{ rg_name }}"
+    name: "{{ vnet_name }}"
+    address_prefixes: "10.0.0.0/16"
+    tags:
+      owner: natallia
+
+- name: Add subnet
+  azure_rm_subnet:
+    resource_group: "{{ rg_name }}"
+    name: "{{ subnet_name }}"
+    address_prefix: "10.0.1.0/24"
+    virtual_network: "{{ vnet_name }}"
+
+- name: Create Network Security Group that allows SSH
+  azure_rm_securitygroup:
+    resource_group: "{{ rg_name }}"
+    name: "sg-{{ base_name }}"
+    rules:
+      - name: SSH
+        protocol: TCP
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    tags:
+      owner: natallia
+
+- name: Create public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ rg_name }}"
+    allocation_method: Static
+    name: "{{ pub_ip_name }}"
+    state: "{{ state }}"
+    tags:
+      owner: natallia
+  register: pub_ip_address
+  ignore_errors: true
+
+- name: Public IP
+  debug:
+    msg: "The public IP is {{ pub_ip_address.state.ip_address }}."
+  when: pub_ip_address.state.ip_address is defined

@@ -1,0 +1,100 @@
+---
+- name: Create instance of Key Vault
+  azure_rm_keyvault:
+    resource_group: "{{ rg_name }}"
+    vault_name: "{{ base_name }}-kv"
+    enabled_for_deployment: true
+    vault_tenant: "{{ vmss_tenant_id}}"
+    sku:
+      name: standard
+      family: A
+    access_policies:
+      - tenant_id: "{{ vmss_tenant_id }}"
+        object_id: "{{ vmss_principal_id }}"
+        secrets:
+          - get
+          - list
+        certificates:
+          - get
+          - list
+      - tenant_id: "{{ vmss_tenant_id }}"
+        object_id: 368dc7b3-290a-4388-9643-473c3e69a93e # ansible
+        secrets:
+          - get
+          - list
+          - set
+          - delete
+        certificates:
+          - get
+          - list
+          - create
+          - delete
+      - tenant_id: "{{ vmss_tenant_id }}"
+        object_id: cd9a750d-9a3c-4cf1-9ed7-a304baaf9ba3 # pavel
+        secrets:
+          - get
+          - list
+          - set
+          - delete
+        certificates:
+          - get
+          - list
+          - create
+          - delete
+    tags:
+      owner: natalia
+
+- name: Retrieve Key Vault information
+  azure.azcollection.azure_rm_keyvault_info:
+    resource_group: "{{ rg_name }}"
+    name: "{{ base_name }}-kv"
+  register: keyvault_info
+
+- debug: var=keyvault_info.keyvaults[0]
+
+- name: Set Key Vault URI fact
+  set_fact:
+    keyvault_uri: "{{ keyvault_info.keyvaults[0].vault_uri }}"
+
+################################
+
+- name: Check if the secrets exist
+  azure.azcollection.azure_rm_keyvaultsecret_info:
+    name: "{{ item.key }}"
+    vault_uri: "{{ keyvault_uri }}"
+  register: secret_info
+  with_dict: "{{ secrets }}"
+  ignore_errors: yes
+
+- name: Create secret if it doesn't exist
+  azure.azcollection.azure_rm_keyvaultsecret:
+    keyvault_uri: "{{ keyvault_uri }}"
+    secret_name: "{{ item.key }}"
+    secret_value: "{{ item.value }}"
+    state: present
+  when: secret_info.results[item_index].secrets[0].version is undefined
+  with_dict: "{{ secrets }}"
+  loop_control:
+    index_var: item_index
+
+- name: Display secret creation status
+  debug:
+    msg: "Secret {{ item.key }} created with value: {{ item.value }}"
+  when: secret_info.results[item_index].secrets[0].version is undefined
+  with_dict: "{{ secrets }}"
+  loop_control:
+    index_var: item_index
+# - name: Create or update a Key Vault Secret
+#   azure_rm_keyvaultsecret:
+#     resource_group: "{{ rg_name }}"
+#     vault_name: "{{ base_name }}-kv"
+#     secret_name: "{{ item }}"
+#     keyvault_uri: "{{ keyvault_uri }}"
+#     tags:
+#       owner: pavel
+#   with_items:
+#     - openvpn-passphrase
+#     - openvpn-pki-dh-pem
+#     - openvpn-pki-ca-crt
+#     - openvpn-pki-myservername-crt
+#     - openvpn-pki-myservername-key
