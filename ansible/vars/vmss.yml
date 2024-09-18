@@ -8,6 +8,7 @@ vm_user: azureuser
 location: polandcentral
 pub_ip_name: pubip-{{ base_name }}
 lb_name: lb-{{ base_name }}
+owner: natallia
 ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvLOfoNgAvFLccYsDKicq8jduQoXk8J9fJ8TKuEwNPz
 # placeholders
 secrets:

@@ -42,7 +42,7 @@
           - create
           - delete
     tags:
-      owner: natalia
+      owner: "{{ owner }}"
 
 - name: Retrieve Key Vault information
   azure.azcollection.azure_rm_keyvault_info:

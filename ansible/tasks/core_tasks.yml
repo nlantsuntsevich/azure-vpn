@@ -10,7 +10,7 @@
     name: "{{ vnet_name }}"
     address_prefixes: "10.0.0.0/16"
     tags:
-      owner: natallia
+      owner: "{{ owner }}"
 
 - name: Add subnet
   azure_rm_subnet:
@@ -31,7 +31,7 @@
         priority: 1001
         direction: Inbound
     tags:
-      owner: natallia
+      owner: "{{ owner }}"
 
 - name: Create public IP address
   azure_rm_publicipaddress:
@@ -40,7 +40,7 @@
     name: "{{ pub_ip_name }}"
     state: "{{ state }}"
     tags:
-      owner: natallia
+      owner: "{{ owner }}"
   register: pub_ip_address
   ignore_errors: true
 

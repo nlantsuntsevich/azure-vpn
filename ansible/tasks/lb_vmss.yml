@@ -37,7 +37,7 @@
     #     frontend_port: 22
     state: "{{ state }}"
     tags:
-      owner: natallia
+      owner: "{{ owner }}"
 
 - name: Create VMSS
   azure_rm_virtualmachinescaleset:
@@ -70,7 +70,7 @@
       version: latest
     state: "{{ vmss_state }}"
     tags:
-      owner: natallia
+      owner: "{{ owner }}"
   register: vm_result
 
 - name: Get facts for all virtual networks
@@ -79,9 +79,8 @@
     name: "{{ vmss_name }}"
   register: vmss_info
 
-- debug: var=vmss_info.vmss[0].identity.principal_id
 - name: Set fact for System-Assigned Principal ID
   set_fact:
     vmss_principal_id: "{{ vmss_info.vmss[0].identity.principal_id }}"
     vmss_tenant_id: "{{ vmss_info.vmss[0].identity.tenant_id }}"
-  when: vmss_info.vmss[0].identity.type == 'SystemAssigned'
+  when: vmss_info.vmss[0].identity.type is defined
